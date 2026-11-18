@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dual-general-relativity"
+version = "1.0.2"
+description = "Dual General Relativity (DGR): companion metric f = 2 eta - g, separate GR and DGR systems, Flask app to compute curvature, C / Rcal, eps = G - 8 pi T, and implied stress tensor."
+readme = "README.md"
+license = "MIT"
+authors = [{name = "Dual General Relativity"}]
+keywords = ["general-relativity", "differential-geometry", "sympy", "flask"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+requires-python = ">=3.9"
+dependencies = ["flask", "sympy", "numpy"]
+
+[project.urls]
+Homepage = "https://github.com/YOUR-USERNAME/dual-general-relativity"
+Repository = "https://github.com/YOUR-USERNAME/dual-general-relativity"
+Issues = "https://github.com/YOUR-USERNAME/dual-general-relativity/issues"
+
+[project.scripts]
+dual-general-relativity = "dual_general_relativity.server:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

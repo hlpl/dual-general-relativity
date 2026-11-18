@@ -1,0 +1,151 @@
+Metadata-Version: 2.4
+Name: dual-general-relativity
+Version: 1.0.2
+Summary: Dual General Relativity (DGR): companion metric f = 2 eta - g, separate GR and DGR systems, Flask app to compute curvature, C / Rcal, eps = G - 8 pi T, and implied stress tensor.
+Author: Dual General Relativity
+License-Expression: MIT
+Project-URL: Homepage, https://github.com/YOUR-USERNAME/dual-general-relativity
+Project-URL: Repository, https://github.com/YOUR-USERNAME/dual-general-relativity
+Project-URL: Issues, https://github.com/YOUR-USERNAME/dual-general-relativity/issues
+Keywords: general-relativity,differential-geometry,sympy,flask
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: OS Independent
+Classifier: Intended Audience :: Science/Research
+Classifier: Topic :: Scientific/Engineering :: Physics
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: flask
+Requires-Dist: sympy
+Requires-Dist: numpy
+Dynamic: license-file
+
+# Dual General Relativity
+
+**Dual General Relativity (DGR)** — one repo, two distributions, same name:
+
+- **GitHub:** `dual-general-relativity`
+- **PyPI:** `dual-general-relativity`
+
+## The theory in one paragraph
+
+Constraint: $2\eta = g + f$. $g$ is the input metric, $f = 2\eta - g$ is the companion.
+GR: $R[g] + S_g \to G[g] = 8\pi T(g)$.
+DGR: $R[f] + S_f \to G[f] = 8\pi T(f)$.
+The two systems are **separate**; the constraint links solutions only. There is no combined action.
+
+## T rule (read this before using the app)
+
+- **Blank = symbolic UNKNOWN, never 0.**
+- **T = 0 ONLY** when explicitly written as a zero matrix, or when `Vacuum` mode is chosen.
+- A **defined** T in a preset is **NOT zero** (except the vacuum presets):
+  FLRW / interior: defined T is the non-zero perfect fluid.
+  Schwarzschild / Schwarzschild-companion Tf: defined T = 0 (vacuum).
+  Companion blanks (FLRW / interior / Schwarzschild Tg): unknown dual matter, NOT 0.
+- If T is symbolic, the `eps = G - 8 pi T = 0` check is **N/A**, not FAIL.
+  FAIL means T was explicitly given and `G - 8 pi T != 0`.
+
+## Install
+
+### From PyPI (once published)
+
+```bash
+pip install dual-general-relativity
+dual-general-relativity
+# open http://127.0.0.1:5000
+```
+
+### From GitHub / source
+
+```bash
+git clone https://github.com/YOUR-USERNAME/dual-general-relativity
+cd dual-general-relativity
+pip install -e .
+dual-general-relativity
+```
+
+Or without installing:
+
+```bash
+pip install -r requirements.txt
+python -m dual_general_relativity
+```
+
+### As a library
+
+```python
+import sympy as sp
+from dual_general_relativity import compute_all
+
+t, r, th, ph = sp.symbols("t r theta phi")
+coords = [t, r, th, ph]
+# g = your metric (SymPy Matrix), eta = flat background in same coordinates
+res = compute_all(g, coords, eta, Tf="zero")  # Tf="zero" = explicit vacuum
+print(res["f"])            # companion metric
+print(res["G_f"])         # Einstein tensor of f
+print(res["eps_f"])       # G(f) - 8 pi T(f)
+print(res["C"])           # C = R(f) + Rcal
+```
+
+## The web app
+
+- Single page, same-page results, progress bar, MathJax.
+- Enter $g$ (and $T$, if known) as SymPy expressions. Rows by `;` or newline, entries by `,`.
+- 8 presets: minkowski, minkowski-companion, schwarzschild, schwarzschild-companion,
+  flrw, flrw-companion, interior, interior-companion. Companion = $g \to 2\eta - g$.
+- **Compute mode:** `Full` = all quantities incl. Rcal / C. `Fast` = substitute M, R, ... from the
+  Evaluation point before curvature, skip Rcal / C, keep G, eps, T_imp, rho/p.
+  Use **Fast** for interior on an old laptop: ~6 s here vs ~80 s Full (old code: ~7 min).
+  In Fast mode Rcal / C are reported as skipped — ignore the Rcal=0, C=R(f) placeholders.
+- **Implied stress tensor:** for each sector, $T_{imp} = G / 8\pi$ — the T that *would* make eps = 0 —
+  plus for diagonal metrics $\rho_{imp} = -T^t{}_t$ and $p_{imp,i} = T^i{}_i$.
+  This is the direct test of the paper's claim: take a normal-matter solution (interior, FLRW),
+  form its companion, and read off the companion's implied matter. For interior,
+  $\rho^{(f)}_{imp} < 0$ and $\rho^{(f)}_{imp} + p^{(f)}_{imp} < 0$: the companion violates
+  the usual energy conditions.
+
+## Behaviour / limitations (unchanged from the app)
+
+- C explicit formula uses **(M + delta)**, not (M - delta). (M - delta) fails at O(h^2).
+- C check is independent and only runs when d(eta) = 0 (Cartesian); otherwise N/A.
+  There is no independent C check in spherical coordinates: eta itself depends on r, theta,
+  so the (M + delta) formula as written does not apply. The identity R[f] = -Rcal + C still
+  holds by definition of C.
+- G(f) decomposition is an identity by definition of C, not a test; labelled as such.
+- Signature check (needs numpy) + det g / det f shown; checks are PASS / FAIL / N/A.
+- No combined-action residual: GR and DGR are kept as separate systems by design.
+- Security: the app runs `sympify` on user text and `debug=True`. Run locally only,
+  never expose it to the internet.
+
+## Publishing (maintainer)
+
+Replace `YOUR-USERNAME` in `pyproject.toml` and this README with your GitHub username,
+then:
+
+```bash
+# GitHub
+git init
+git add .
+git commit -m "Dual General Relativity v0.1.0"
+git branch -M main
+git remote add origin https://github.com/YOUR-USERNAME/dual-general-relativity.git
+git push -u origin main
+
+# PyPI — check the name first at https://pypi.org/project/dual-general-relativity/
+pip install build twine
+python -m build
+twine upload dist/*
+```
+
+## Files
+
+- `src/dual_general_relativity/compute.py` — DGR computation
+- `src/dual_general_relativity/server.py` — Flask app (`dual-general-relativity` command)
+- `tests/test_dgr.py` — smoke tests (`pytest`)
+- `pyproject.toml` — PyPI packaging (Hatchling, `src` layout)
+- `requirements.txt` — Flask, SymPy, NumPy
+- `LICENSE` — MIT
+
+## License
+
+MIT — see `LICENSE`.

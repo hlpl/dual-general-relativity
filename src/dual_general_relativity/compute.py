@@ -297,3 +297,4 @@ def mixed_T(Tcov, ginv):
     """T^mu_nu = g^{mu alpha} T_{alpha nu}. For a diagonal metric the diagonal
     entries are rho = -T^t_t and p_i = T^i_i (no sum)."""
     return _fsimp(ginv * Tcov)
+# v1.0.2

@@ -32,3 +32,4 @@ def test_interior_fast():
     assert checks.get("\\varepsilon^{(g)}=0 (N/A if T^{(g)} unknown)") is True
     assert checks.get("\\varepsilon^{(f)}=0 (N/A if T^{(f)} unknown)") is None
     assert "rho^{(f)}_{imp}" in res["numeric"]
+# v1.0.2

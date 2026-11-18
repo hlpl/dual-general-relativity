@@ -19,3 +19,4 @@ def __getattr__(name):
         from .server import create_app, main
         return {"create_app": create_app, "main": main}[name]
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+# v1.0.2

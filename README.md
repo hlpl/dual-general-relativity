@@ -1,4 +1,4 @@
-# Dual General Relativity (DGR) — a calculator, not a claim
+# Dual General Relativity (DGR) 
 
 **Two metrics. One manifold. You bring the metric, it does the algebra.**
 

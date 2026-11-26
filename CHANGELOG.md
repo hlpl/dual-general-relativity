@@ -1,3 +1,9 @@
+## v2.0.0
+- Breaking change: replaces the v1.x f = 2η − g model with f = ε·φ\*g (coordinate swap).
+- 32 presets, T^f rules (Same / Vacuum / Set).
+- Placeholder dropdown fix, Mode: Normal/Fast toggle, collapsible Fast vs Normal note.
+- EE checked as ε = G − κT, not forced. Local use only.
+
 # Changelog
 
 ## 1.0.2

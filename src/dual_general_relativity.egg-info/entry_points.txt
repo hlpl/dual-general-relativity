@@ -1,2 +1,0 @@
-[console_scripts]
-dual-general-relativity = dual_general_relativity.server:main

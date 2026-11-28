@@ -1,13 +1,83 @@
-# Dual General Relativity (DGR) 
+# Dual General Relativity (DGR) — a calculator, not a claim
 
 **Two metrics. One manifold. You bring the metric, it does the algebra.**
 
-DGR is a local web app that computes what a second, companion metric implies —
-given a metric you already trust from general relativity. It proves nothing and
-selects nothing. It computes, checks, and shows its work.
+Give it a metric you trust from GR. It builds a companion metric by a coordinate
+swap (`f = ε · φ*g`), computes both Einstein tensors, and checks
+`ε = G − κT = 0` for each — showing every tensor, every residual, every step.
+No theorems. No fitted parameters. No forced passes.
 
-> ⚠️ **Local use only.** The app runs `sympify` on text you type. Never expose it
-> to the internet. Run it on your own machine, with your own inputs.
+- **32 presets** — Schwarzschild, Kerr, FLRW, Gödel, BTZ, Alcubierre, and more
+- **Fast / Normal modes** — full symbolic check, or a numeric answer in seconds
+- **Notes that read the output** — e.g. a `d²r/dt² = c·r` term is flagged as
+  *possibly explaining* expansion, with the responsible term named
+
+> ⚠️ **Local use only.** The app runs `sympify` on text you type. Never expose
+> it to the internet. Run it on your own machine, with your own inputs.
+
+---
+
+## Usage — three ways, same app
+
+Pick the one that fits you. All three end at the same place:
+**http://127.0.0.1:5000** in your browser.
+
+### 1. Download and run (easiest, no install)
+
+```bash
+# 1. Go to Releases on GitHub and download the latest .zip
+#    https://github.com/hlpl/dual-general-relativity/releases
+# 2. Unzip it, then:
+cd dual-general-relativity
+chmod +x start.sh
+./start.sh
+# 3. Open http://127.0.0.1:5000 — hard refresh: Ctrl+Shift+R
+```
+
+`start.sh` kills any stale server on the port, clears `__pycache__`, creates
+`.venv` if needed, and installs Flask + SymPy + NumPy **inside the venv only**.
+No system pip, no sudo, nothing global.
+
+### 2. Install with pip (easiest to re-run later)
+
+```bash
+pip install dual-general-relativity
+dual-general-relativity
+# Open http://127.0.0.1:5000
+```
+
+To stop it: `Ctrl+C` in the terminal. To run it again tomorrow: just
+`dual-general-relativity` again — no download, no setup.
+
+### 3. From source (for changing the code)
+
+```bash
+git clone https://github.com/hlpl/dual-general-relativity.git
+cd dual-general-relativity
+chmod +x start.sh
+./start.sh
+# Open http://127.0.0.1:5000
+```
+
+### 4. As a library (no web app)
+
+```python
+from dual_general_relativity import analyze
+from dual_general_relativity.presets import PRESETS
+
+r = analyze(dict(PRESETS["schwarzschild (vacuum)"]))
+for name, ok, _ in r["checks"]:
+    print(name, ok)
+```
+
+### Once it is running
+
+1. **Pick a preset** from the dropdown (it starts on *“— pick a preset —”*).
+2. Change anything you like — a preset is just a starting point.
+3. Click **Compute →**. Watch the `MM:SS` timer.
+4. Read the **EE checks** (`SATISFIED` / `NOT SATISFIED`), then open **All tensors**
+   and the **Notes** for the detail.
+5. On highlighted presets, read **Why this metric matters** below the output.
 
 ---
 
@@ -58,33 +128,6 @@ and it is labelled metric-only).
 | **Notes** | The app reads its own output: e.g. a `d²r/dt² = c·r` term is reported as *possibly explaining* expansion, with the responsible term named |
 | **All tensors** | Every tensor, collapsible, one click per tensor |
 | **Why this metric matters** | On highlighted presets: *why* it matters + *which term does it* |
-
----
-
-## Quick start
-
-```bash
-git clone https://github.com/hlpl/dual-general-relativity.git
-cd dual-general-relativity
-chmod +x start.sh
-./start.sh
-# open http://127.0.0.1:5000 — hard refresh: Ctrl+Shift+R
-```
-
-`start.sh` kills any stale server on the port, clears `__pycache__`, creates
-`.venv` if needed, and installs Flask + SymPy + NumPy **inside the venv only**.
-No system pip, no sudo, nothing global.
-
-Or as a library:
-
-```python
-from dual_general_relativity import analyze
-from dual_general_relativity.presets import PRESETS
-
-r = analyze(dict(PRESETS["schwarzschild (vacuum)"]))
-for name, ok, _ in r["checks"]:
-    print(name, ok)
-```
 
 ---
 
@@ -192,6 +235,9 @@ requirements.txt   Flask, SymPy, NumPy
 
 ## Version
 
+**v2.0.2** — docs only: Usage section at the top (download-run, pip install,
+run, visit localhost).
+**v2.0.1** — docs only: punchy PyPI description + tighter README opening.
 **v2.0.0** — replaces the v1.x `f = 2η − g` model with the swap model. The old
 model is still available under release **v1.0.2**. The change of model is why
 this is a major version bump: v1 results do not reproduce under v2.

@@ -3,8 +3,9 @@ requires=["setuptools>=61","wheel"]
 build-backend="setuptools.build_meta"
 [project]
 name="dual-general-relativity"
-version = "2.0.0"
-description="DGR Calculator"
+version = "2.0.2"
+readme = "README.md"
+description = "Dual General Relativity calculator: two metrics, one manifold — companion metric, Einstein checks, 32 presets. Local use only."
 requires-python=">=3.9"
 dependencies=["sympy","flask","numpy"]
 [project.scripts]
